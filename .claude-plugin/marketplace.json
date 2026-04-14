@@ -1,0 +1,31 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "oh-my-caveman",
+  "description": "Multi-agent orchestration + caveman communication mode for Claude Code. Token-efficient by default.",
+  "owner": {
+    "name": "aikanedumps",
+    "email": ""
+  },
+  "plugins": [
+    {
+      "name": "oh-my-caveman",
+      "description": "Multi-agent orchestration with 43 skills, 19 specialist agents, and always-on caveman communication mode. ~75% token savings by default.",
+      "version": "1.0.0",
+      "author": {
+        "name": "aikanedumps",
+        "email": ""
+      },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/aikanedumps/oh-my-caveman",
+      "tags": [
+        "multi-agent",
+        "orchestration",
+        "caveman",
+        "token-efficient",
+        "ultrawork"
+      ]
+    }
+  ],
+  "version": "1.0.0"
+}

@@ -1,0 +1,20 @@
+node_modules/
+*.log
+.DS_Store
+.omc/state/
+.idea/
+.env
+.tmp/
+*.original.md
+*.skill
+
+# Windows reserved names
+nul
+NUL
+
+# Build artifacts
+dist/
+coverage/
+
+# Release body generated dynamically
+.github/release-body.md

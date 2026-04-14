@@ -1,0 +1,45 @@
+{
+  "name": "oh-my-caveman",
+  "version": "1.0.0",
+  "description": "Multi-agent orchestration + caveman mode. Token-efficient by default.",
+  "author": {
+    "name": "aikanedumps"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "multi-agent",
+    "orchestration",
+    "caveman",
+    "token-efficient"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/caveman-activate.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/caveman-mode-tracker.cjs",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  }
+}
