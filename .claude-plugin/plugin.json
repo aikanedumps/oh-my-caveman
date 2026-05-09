@@ -1,0 +1,35 @@
+{
+  "name": "oh-my-caveman",
+  "version": "2.0.0",
+  "description": "Multi-agent orchestration + caveman mode. Token-efficient by default.",
+  "author": {
+    "name": "aikanedumps"
+  },
+  "repository": "https://github.com/aikanedumps/oh-my-caveman",
+  "homepage": "https://github.com/aikanedumps/oh-my-caveman",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "multi-agent",
+    "orchestration",
+    "caveman",
+    "token-efficient"
+  ],
+  "skills": [
+    "./skills/ai-slop-cleaner/",
+    "./skills/autopilot/",
+    "./skills/cancel/",
+    "./skills/deep-interview/",
+    "./skills/omc-reference/",
+    "./skills/plan/",
+    "./skills/ralph/",
+    "./skills/ralplan/",
+    "./skills/setup/",
+    "./skills/team/",
+    "./skills/ultraqa/",
+    "./skills/ultrawork/"
+  ],
+  "mcpServers": "./.mcp.json",
+  "commands": "./commands/"
+}
