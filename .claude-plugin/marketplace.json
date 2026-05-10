@@ -10,7 +10,7 @@
     {
       "name": "oh-my-caveman",
       "description": "Multi-agent orchestration with 43 skills, 19 specialist agents, and always-on caveman communication mode. ~75% token savings by default.",
-      "version": "2.0.0",
+      "version": "2.0.1",
       "author": {
         "name": "aikanedumps",
         "email": ""
@@ -27,5 +27,5 @@
       ]
     }
   ],
-  "version": "2.0.0"
+  "version": "2.0.1"
 }

@@ -15,13 +15,31 @@ const claudeDir = path.join(os.homedir(), '.claude');
 const flagPath = path.join(claudeDir, '.caveman-active');
 const settingsPath = path.join(claudeDir, 'settings.json');
 
+// Emit a SessionStart hook output envelope and exit. Coexists with sibling
+// SessionStart hooks (session-start.mjs, project-memory-session.mjs,
+// wiki-session-start.mjs) which emit the same shape — Claude Code merges
+// each entry's additionalContext deterministically.
+function emitAndExit(additionalContext) {
+  if (additionalContext == null || additionalContext === '') {
+    process.stdout.write(JSON.stringify({ continue: true, suppressOutput: true }));
+  } else {
+    process.stdout.write(JSON.stringify({
+      continue: true,
+      hookSpecificOutput: {
+        hookEventName: 'SessionStart',
+        additionalContext,
+      },
+    }));
+  }
+  process.exit(0);
+}
+
 const mode = getDefaultMode();
 
 // "off" mode — skip activation entirely, don't write flag or emit rules
 if (mode === 'off') {
   try { fs.unlinkSync(flagPath); } catch (e) {}
-  process.stdout.write('OK');
-  process.exit(0);
+  emitAndExit(null);
 }
 
 // 1. Write flag file
@@ -40,16 +58,15 @@ try {
 const INDEPENDENT_MODES = new Set(['commit', 'review', 'compress']);
 
 if (INDEPENDENT_MODES.has(mode)) {
-  process.stdout.write('CAVEMAN MODE ACTIVE — level: ' + mode + '. Behavior defined by /caveman-' + mode + ' skill.');
-  process.exit(0);
+  emitAndExit('CAVEMAN MODE ACTIVE — level: ' + mode + '. Behavior defined by /caveman-' + mode + ' skill.');
 }
 
 // Resolve the canonical label for wenyan alias
 const modeLabel = mode === 'wenyan' ? 'wenyan-full' : mode;
 
 // Read SKILL.md — the single source of truth for caveman behavior.
-// Plugin installs: __dirname = <plugin_root>/hooks/, SKILL.md at <plugin_root>/skills/caveman/SKILL.md
-// Standalone installs: __dirname = ~/.claude/hooks/, SKILL.md won't exist — falls back to hardcoded rules.
+// Plugin installs: __dirname = <plugin_root>/scripts/, SKILL.md at <plugin_root>/skills/caveman/SKILL.md
+// Standalone installs: __dirname = ~/.claude/hooks/ or scripts/; SKILL.md won't exist — falls back to hardcoded rules.
 let skillContent = '';
 try {
   skillContent = fs.readFileSync(
@@ -120,7 +137,8 @@ try {
   if (!hasStatusline) {
     const isWindows = process.platform === 'win32';
     const scriptName = isWindows ? 'caveman-statusline.ps1' : 'caveman-statusline.sh';
-    const scriptPath = path.join(__dirname, scriptName);
+    // Statusline scripts ship under hooks/ (alongside hooks.json), not scripts/
+    const scriptPath = path.join(__dirname, '..', 'hooks', scriptName);
     const command = isWindows
       ? `powershell -ExecutionPolicy Bypass -File "${scriptPath}"`
       : `bash "${scriptPath}"`;
@@ -137,4 +155,4 @@ try {
   // Silent fail — don't block session start over statusline detection
 }
 
-process.stdout.write(output);
+emitAndExit(output);
