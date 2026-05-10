@@ -170,10 +170,10 @@ export function getGlobalOmcStateCandidates(...segments: string[]): string[] {
  * Get the plugin cache base directory for oh-my-caveman.
  * This is the directory containing version subdirectories.
  *
- * Structure: &lt;configDir&gt;/plugins/cache/oh-my-caveman/oh-my-caveman/
+ * Structure: &lt;configDir&gt;/plugins/cache/omc/oh-my-caveman/
  */
 export function getPluginCacheBase(): string {
-  return join(getClaudeConfigDir(), 'plugins', 'cache', 'oh-my-caveman', 'oh-my-caveman');
+  return join(getClaudeConfigDir(), 'plugins', 'cache', 'omc', 'oh-my-caveman');
 }
 
 /**

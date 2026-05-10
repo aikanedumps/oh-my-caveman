@@ -660,7 +660,7 @@ function compactBudgetedText(text: string, maxChars: number): string {
 function looksLikeOmcGuidance(content: string): boolean {
   return (
     content.includes("<guidance_schema_contract>") &&
-    /oh-my-(claudecode|codex)/i.test(content) &&
+    /oh-my-(claudecode|codex|caveman)/i.test(content) &&
     OMC_STARTUP_COMPACTABLE_SECTIONS.some(
       (section) =>
         content.includes(`<${section}>`) && content.includes(`</${section}>`),

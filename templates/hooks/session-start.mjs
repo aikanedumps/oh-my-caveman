@@ -216,7 +216,7 @@ function looksLikeOmcGuidance(content) {
   return (
     typeof content === 'string' &&
     content.includes('<guidance_schema_contract>') &&
-    /oh-my-(claudecode|codex)/i.test(content) &&
+    /oh-my-(claudecode|codex|caveman)/i.test(content) &&
     OMC_STARTUP_COMPACTABLE_SECTIONS.some(
       section => content.includes(`<${section}>`) && content.includes(`</${section}>`),
     )
