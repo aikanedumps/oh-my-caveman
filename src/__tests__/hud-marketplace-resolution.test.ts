@@ -256,10 +256,6 @@ describe('HUD marketplace resolution', () => {
 
     const content = readFileSync(hudScriptPath, 'utf-8');
     expect(content).toContain('"oh-my-caveman/dist/hud/index.js"');
-    expect(content).toContain('"oh-my-caveman/dist/hud/index.js"');
-    expect(content.indexOf('"oh-my-caveman/dist/hud/index.js"')).toBeLessThan(
-      content.indexOf('"oh-my-caveman/dist/hud/index.js"')
-    );
 
     execFileSync(process.execPath, [hudScriptPath], {
       cwd: root,
