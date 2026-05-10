@@ -5,6 +5,10 @@ node_modules/
 .idea/
 .env
 .tmp/
+
+# Test detritus — `getJobWorkingDir` integration tests create
+# `.test-job-state-db-<pid>/.omc/state/jobs.db*` and don't always clean up.
+.test-job-state-db-*/
 *.original.md
 *.skill
 
