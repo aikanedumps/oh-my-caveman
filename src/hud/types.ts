@@ -554,6 +554,7 @@ export interface HudElementConfig {
   model: boolean;            // Show current model name
   modelFormat: ModelFormat;   // Model name verbosity level
   omcLabel: boolean;
+  caveman: boolean;          // Show active caveman mode badge ([CAVEMAN], [CAVEMAN:ULTRA])
   rateLimits: boolean;  // Show 5h and weekly rate limits
   ralph: boolean;
   autopilot: boolean;
@@ -635,7 +636,7 @@ export interface LayoutConfig {
 export const DEFAULT_ELEMENT_ORDER: Required<LayoutConfig> = {
   line1: ['hostname', 'cwd', 'gitRepo', 'gitBranch', 'gitStatus', 'model', 'apiKeySource', 'profile'],
   main: [
-    'omcLabel', 'enterpriseCost', 'rateLimits', 'customBuckets', 'permission', 'thinking',
+    'omcLabel', 'caveman', 'enterpriseCost', 'rateLimits', 'customBuckets', 'permission', 'thinking',
     'promptTime', 'session', 'tokens', 'ralph', 'autopilot', 'prd',
     'skills', 'lastSkill', 'contextBar', 'agents', 'background',
     'callCounts', 'lastTool', 'sessionSummary',
@@ -686,6 +687,7 @@ export const DEFAULT_HUD_CONFIG: HudConfig = {
     model: false,             // Disabled by default for backward compatibility
     modelFormat: 'short',     // Short names by default for backward compatibility
     omcLabel: true,
+    caveman: true,            // Show caveman badge whenever ~/.claude/.caveman-active exists
     rateLimits: true,  // Show rate limits by default
     ralph: true,
     autopilot: true,
