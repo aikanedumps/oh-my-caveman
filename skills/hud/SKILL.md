@@ -73,7 +73,7 @@ On Windows, determine correct path first:
 node -e "const p=require('path').join(require('os').homedir(),'.claude','hud','omc-hud.mjs').split(require('path').sep).join('/');console.log(JSON.stringify(p))"
 ```
 
-**IMPORTANT:** Command path MUST use forward slashes on all platforms. Claude Code executes statusLine commands via bash, which interprets backslashes as escape characters and breaks path.
+**IMPORTANT:** The command path MUST use forward slashes on all platforms. Claude Code executes statusLine commands via bash, which interprets backslashes as escape characters and breaks path.
 
 On Unix, `statusLine` field stays portable:
 ```json
@@ -85,7 +85,7 @@ On Unix, `statusLine` field stays portable:
 }
 ```
 
-On Windows, path uses forward slashes (not backslashes):
+On Windows the path uses forward slashes (not backslashes):
 ```json
 {
   "statusLine": {

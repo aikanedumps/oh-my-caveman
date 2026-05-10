@@ -8,7 +8,7 @@ level: 2
 
 **One command to learn. Everything else automatic.**
 
-**When skill invoked, immediately execute workflow below. Do not restate or summarize instructions back to user.**
+**When skill invoked, immediately execute the workflow below. Do not only restate or summarize instructions back to user.**
 
 Note: All `~/.claude/...` paths respect `CLAUDE_CONFIG_DIR` when that env var is set.
 
