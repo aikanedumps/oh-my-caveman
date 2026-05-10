@@ -67,7 +67,7 @@ export function resolveHudLabels(locale, labels) {
 export const DEFAULT_ELEMENT_ORDER = {
     line1: ['hostname', 'cwd', 'gitRepo', 'gitBranch', 'gitStatus', 'model', 'apiKeySource', 'profile'],
     main: [
-        'omcLabel', 'enterpriseCost', 'rateLimits', 'customBuckets', 'permission', 'thinking',
+        'omcLabel', 'caveman', 'enterpriseCost', 'rateLimits', 'customBuckets', 'permission', 'thinking',
         'promptTime', 'session', 'tokens', 'ralph', 'autopilot', 'prd',
         'skills', 'lastSkill', 'contextBar', 'agents', 'background',
         'callCounts', 'lastTool', 'sessionSummary',
@@ -90,6 +90,7 @@ export const DEFAULT_HUD_CONFIG = {
         model: false, // Disabled by default for backward compatibility
         modelFormat: 'short', // Short names by default for backward compatibility
         omcLabel: true,
+        caveman: true, // Show caveman badge whenever ~/.claude/.caveman-active exists
         rateLimits: true, // Show rate limits by default
         ralph: true,
         autopilot: true,

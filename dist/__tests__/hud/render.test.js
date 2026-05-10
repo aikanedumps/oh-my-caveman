@@ -711,6 +711,7 @@ describe('optional HUD line defaults', () => {
                 cwd: true,
                 gitRepo: false,
                 gitBranch: false,
+                caveman: false,
             },
         };
         await expect(render(context, config)).resolves.toBe('~/workspace/project');

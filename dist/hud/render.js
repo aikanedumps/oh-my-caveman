@@ -7,6 +7,7 @@ import { DEFAULT_HUD_CONFIG, DEFAULT_ELEMENT_ORDER, DEFAULT_HUD_LABELS } from ".
 import { bold, dim } from "./colors.js";
 import { stringWidth, getCharWidth } from "../utils/string-width.js";
 import { renderRalph } from "./elements/ralph.js";
+import { renderCaveman } from "./elements/caveman.js";
 import { renderAgentsByFormat, renderAgentsMultiLine, } from "./elements/agents.js";
 import { renderTodosWithCurrent } from "./elements/todos.js";
 import { renderSkills, renderLastSkill } from "./elements/skills.js";
@@ -237,6 +238,11 @@ export async function render(context, config) {
         else {
             rendered.set("omcLabel", bold(`[OMC${versionTag}]`));
         }
+    }
+    if (enabledElements.caveman) {
+        const caveman = renderCaveman();
+        if (caveman)
+            rendered.set("caveman", caveman);
     }
     // Determine effective enterprise mode before rendering limits: only real
     // enterprise accounts replace token-window limits with enterprise cost.

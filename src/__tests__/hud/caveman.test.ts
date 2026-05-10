@@ -42,10 +42,10 @@ describe('renderCaveman', () => {
     expect(renderCaveman()).toBeNull();
   });
 
-  it('returns [CAVEMAN] for the default full mode (no level suffix)', async () => {
+  it('returns [CAVEMAN:FULL] for the default full mode', async () => {
     writeFlag('full');
     const { renderCaveman } = await import('../../hud/elements/caveman.js');
-    expect(stripAnsi(renderCaveman())).toBe('[CAVEMAN]');
+    expect(stripAnsi(renderCaveman())).toBe('[CAVEMAN:FULL]');
   });
 
   it('returns [CAVEMAN:LITE] for lite mode', async () => {

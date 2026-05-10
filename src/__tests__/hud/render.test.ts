@@ -821,6 +821,7 @@ describe('optional HUD line defaults', () => {
         cwd: true,
         gitRepo: false,
         gitBranch: false,
+        caveman: false,
       },
     };
 
