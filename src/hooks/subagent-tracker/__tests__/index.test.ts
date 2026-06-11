@@ -8,6 +8,7 @@ import {
   getStaleAgents,
   getTrackingStats,
   processSubagentStart,
+  processSubagentStop,
   readTrackingState,
   writeTrackingState,
   recordToolUsageWithTiming,
@@ -627,6 +628,47 @@ describe("subagent-tracker", () => {
       expect(
         persistedState.agents.filter((agent) => agent.status === "running"),
       ).toHaveLength(1);
+    });
+  });
+
+  describe("processSubagentStop", () => {
+    // Regression: a non-suppressed SubagentStop return (additionalContext /
+    // hookSpecificOutput) is re-injected into the finishing subagent and loops,
+    // collapsing the agent's report to a "Ready." stub under caveman mode.
+    // SubagentStop must stay silent. (v2.0.2)
+    it("returns suppressed output with NO model-visible context", () => {
+      const base = {
+        session_id: "session-stop",
+        transcript_path: join(testDir, "transcript.jsonl"),
+        cwd: testDir,
+        permission_mode: "default",
+      };
+      processSubagentStart({
+        ...base,
+        hook_event_name: "SubagentStart" as const,
+        agent_id: "researcher-1",
+        agent_type: "oh-my-caveman:document-specialist",
+        prompt: "Research the SDK version",
+      });
+
+      const result = processSubagentStop({
+        ...base,
+        hook_event_name: "SubagentStop" as const,
+        agent_id: "researcher-1",
+        agent_type: "oh-my-caveman:document-specialist",
+        output: "## Research: full report with citations...",
+      });
+
+      // The whole point: nothing the model can see / be re-prompted by.
+      expect(result).toEqual({ continue: true, suppressOutput: true });
+      expect(result.hookSpecificOutput).toBeUndefined();
+
+      // Side-effect tracking must still happen (state file feeds HUD / trace).
+      const state = readTrackingState(testDir);
+      const agent = state.agents.find((a) => a.agent_id === "researcher-1");
+      expect(agent?.status).toBe("completed");
+      expect(agent?.output_summary).toContain("full report");
+      expect(state.total_completed).toBe(1);
     });
   });
 

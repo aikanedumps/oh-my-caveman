@@ -107,6 +107,12 @@ export interface SubagentStopInput {
 
 export interface HookOutput {
   continue: boolean;
+  /**
+   * When true, the hook produces no model-visible output. Required on
+   * SubagentStop returns: emitting hookSpecificOutput there re-prompts the
+   * finishing subagent and loops (see processSubagentStop).
+   */
+  suppressOutput?: boolean;
   hookSpecificOutput?: {
     hookEventName: string;
     additionalContext?: string;
@@ -735,18 +741,17 @@ export function processSubagentStop(input: SubagentStopInput): HookOutput {
       });
     } catch { /* best-effort */ }
 
-    const runningCount = state.agents.filter(
-      (a) => a.status === "running",
-    ).length;
-
-    return {
-      continue: true,
-      hookSpecificOutput: {
-        hookEventName: "SubagentStop",
-        additionalContext: `Agent ${input.agent_type} ${succeeded ? "completed" : "failed"} (${input.agent_id})`,
-        agent_count: runningCount,
-      },
-    };
+    // SubagentStop MUST stay silent. Claude Code re-injects any SubagentStop
+    // `additionalContext` into the finishing subagent, which prompts it to
+    // respond again → fires another SubagentStop → the hook emits context
+    // again → infinite re-prompt loop. Under caveman mode the repeated acks
+    // collapse to a one-word stub ("Ready."), so the agent's real report (e.g.
+    // a research summary after dozens of web lookups) never reaches the
+    // orchestrator. Tracking is purely a side effect: the state file written
+    // above feeds the HUD and /trace — nothing consumes this hook's stdout but
+    // the model. Keep it suppressed. (Fixes "caveman suppression" of subagent
+    // deliverables; v2.0.2.)
+    return { continue: true, suppressOutput: true };
   } finally {
     releaseLock(input.cwd);
   }

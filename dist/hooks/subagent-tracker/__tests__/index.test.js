@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { mkdirSync, rmSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
-import { recordToolUsage, getAgentDashboard, getStaleAgents, getTrackingStats, processSubagentStart, readTrackingState, writeTrackingState, recordToolUsageWithTiming, getAgentPerformance, updateTokenUsage, recordFileOwnership, detectFileConflicts, suggestInterventions, calculateParallelEfficiency, getAgentObservatory, flushPendingWrites, } from "../index.js";
+import { recordToolUsage, getAgentDashboard, getStaleAgents, getTrackingStats, processSubagentStart, processSubagentStop, readTrackingState, writeTrackingState, recordToolUsageWithTiming, getAgentPerformance, updateTokenUsage, recordFileOwnership, detectFileConflicts, suggestInterventions, calculateParallelEfficiency, getAgentObservatory, flushPendingWrites, } from "../index.js";
 import { readMissionBoardState } from "../../../hud/mission-board.js";
 describe("subagent-tracker", () => {
     let testDir;
@@ -536,6 +536,43 @@ describe("subagent-tracker", () => {
             expect(persistedState.total_spawned).toBe(1);
             expect(persistedState.agents.filter((agent) => agent.agent_id === "worker-3")).toHaveLength(1);
             expect(persistedState.agents.filter((agent) => agent.status === "running")).toHaveLength(1);
+        });
+    });
+    describe("processSubagentStop", () => {
+        // Regression: a non-suppressed SubagentStop return (additionalContext /
+        // hookSpecificOutput) is re-injected into the finishing subagent and loops,
+        // collapsing the agent's report to a "Ready." stub under caveman mode.
+        // SubagentStop must stay silent. (v2.0.2)
+        it("returns suppressed output with NO model-visible context", () => {
+            const base = {
+                session_id: "session-stop",
+                transcript_path: join(testDir, "transcript.jsonl"),
+                cwd: testDir,
+                permission_mode: "default",
+            };
+            processSubagentStart({
+                ...base,
+                hook_event_name: "SubagentStart",
+                agent_id: "researcher-1",
+                agent_type: "oh-my-caveman:document-specialist",
+                prompt: "Research the SDK version",
+            });
+            const result = processSubagentStop({
+                ...base,
+                hook_event_name: "SubagentStop",
+                agent_id: "researcher-1",
+                agent_type: "oh-my-caveman:document-specialist",
+                output: "## Research: full report with citations...",
+            });
+            // The whole point: nothing the model can see / be re-prompted by.
+            expect(result).toEqual({ continue: true, suppressOutput: true });
+            expect(result.hookSpecificOutput).toBeUndefined();
+            // Side-effect tracking must still happen (state file feeds HUD / trace).
+            const state = readTrackingState(testDir);
+            const agent = state.agents.find((a) => a.agent_id === "researcher-1");
+            expect(agent?.status).toBe("completed");
+            expect(agent?.output_summary).toContain("full report");
+            expect(state.total_completed).toBe(1);
         });
     });
     describe("Tool Timing (Phase 1.1)", () => {

@@ -81,6 +81,12 @@ export interface SubagentStopInput {
 }
 export interface HookOutput {
     continue: boolean;
+    /**
+     * When true, the hook produces no model-visible output. Required on
+     * SubagentStop returns: emitting hookSpecificOutput there re-prompts the
+     * finishing subagent and loops (see processSubagentStop).
+     */
+    suppressOutput?: boolean;
     hookSpecificOutput?: {
         hookEventName: string;
         additionalContext?: string;
